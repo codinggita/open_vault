@@ -356,3 +356,6 @@ MigrationBackup/
 
 # Mac-specific
 .DS_Store
+
+# Enviornment File
+*.env
