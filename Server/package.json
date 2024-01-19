@@ -4,7 +4,8 @@
   "description": "File Sharing API",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test", 
+    "start": "nodemon index.js"
   },
   "author": "shubhansu-kr",
   "license": "ISC",
