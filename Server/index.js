@@ -22,7 +22,6 @@ app.get("/", (req, res)=>{
 
 const start = async () => {
     try {
-        console.log(process.env);
         // Check if required environment variables are set
         if (!mongoURI) {
             console.error('MONGO_URI environment variable is not set.');
@@ -32,6 +31,7 @@ const start = async () => {
         await connectDB(mongoURI);
         app.listen(port, () => {
             console.log(`Server is listening to port ${port} happily`);
+            console.log(`GO Live: http://localhost:${port}/`)
         });
     } catch (error) {
         console.error('Error starting the server:', error);
