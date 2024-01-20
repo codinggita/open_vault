@@ -1,8 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
+const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 
 const User = require('./../models/user');
 
+dotenv.config();
 const secretKey = process.env.SECRET_KEY;
 
 const securePassword = async (password) => {
@@ -70,7 +72,7 @@ const loginUser = async (req, res) => {
 
         if (isPassCorrect) {
 
-            const accessToken = User.generateAccessToken(secretKey);
+            const accessToken = oldUser.generateAccessToken(secretKey);
              
             return res.status(StatusCodes.OK).json({oldUser, accessToken});
         }
