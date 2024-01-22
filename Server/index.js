@@ -6,6 +6,7 @@ const cors = require('cors');
 // Import Modules
 const {connectDB, disconnectDB} = require('./db/connect');
 const userAuthRouter = require('./routes/userAuthRouters');
+const dropRouter = require('./routes/dropRouter');
 
 
 // Configure Env Variables.
@@ -25,6 +26,7 @@ app.get("/", (req, res)=>{
 
 // Router
 app.use("/user/auth", userAuthRouter);
+app.use("/drop", dropRouter);
 
 const start = async () => {
     try {
