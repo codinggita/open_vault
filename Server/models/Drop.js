@@ -10,13 +10,16 @@ const dropSchema = new mongoose.Schema(
             type: String
         },
         createdOn: {
-            type: Date
+            type: Date,
+            default: Date.now
         },
         openedBy: {
-            type: String
+            type: String,
+            default: null
         },
         openedOn: {
-            type: Date
+            type: Date,
+            default: null
         },
         privateKey: {
             type: String
