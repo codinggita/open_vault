@@ -77,16 +77,27 @@ const visitDrop = async (req, res) => {
         const did = req.params.did;
         const drop = await Drop.findOne({ did });
 
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-obj-msg'
+        };
+
         if (!drop) {
-            return res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
+            responseObject.msg = `Drop with id: ${did} is invalid or expired.`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         const isOpened = drop.openedOn;
         if (isOpened) {
-            return res.status(StatusCodes.GONE).send(`Drop already opened`);
+            responseObject.msg = `Drop with id: ${did} is already looted`;
+            return res.status(StatusCodes.GONE).send(responseObject);
         }
 
-        return res.status(StatusCodes.OK).send(`Drop available, provide key`);
+        responseObject.isVerified = true;
+        responseObject.msg = `Drop with id: ${did} is available, provide Key`;
+
+        return res.status(StatusCodes.OK).send(responseObject);
+
     } catch (err) {
         console.log(`Error visiting(verifying drop)`, err);
         process.exit(1);
@@ -97,8 +108,14 @@ const createDrop = async (req, res) => {
     try {
         const { eData } = req.body;
 
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-obj-msg'
+        };
+
         if (!eData) {
-            return res.status(StatusCodes.BAD_REQUEST).send('All Fields required');
+            responseObject.msg = `All fields are required`;
+            return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
         const did = nanoid();
@@ -137,7 +154,12 @@ const createDrop = async (req, res) => {
         // return private key and did to the user
         const pass = keys.privateKey;
 
-        return req.status(StatusCodes.OK).json({ did, pass });
+        responseObject.isVerified = true;
+        responseObject.did = did;
+        responseObject.msg = `Drop created Successfully`;
+        responseObject.pass = pass;
+
+        return res.status(StatusCodes.OK).send(responseObject);
 
     } catch (err) {
         console.log(`Error creating drop`, err);
@@ -149,19 +171,27 @@ const openDrop = async (req, res) => {
     try {
         const { dId, pass } = req.body;
 
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-obj-msg'
+        };
+
         if (!dId || !pass) {
-            return res.status(StatusCodes.BAD_REQUEST).send("All fields required");
+            responseObject.msg = `All fields required`;
+            return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
         const dataPresent = Drop.findOne({ dId });
 
         if (!dataPresent) {
-            return res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
+            responseObject.msg = `Drop with id: ${did} is invalid or expired.`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         // Check if data is already accessed. 
         if (dataPresent.openedOn) {
-            return res.status(StatusCodes.NO_CONTENT).send(`Drop already looted`);
+            responseObject.msg = `Drop with id: ${did} is already looted.`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         const encryptedData = dataPresent.eData;
@@ -169,7 +199,8 @@ const openDrop = async (req, res) => {
 
         const isKeyCorrect = await bcrypt.compare(key, pass);
         if (!isKeyCorrect) {
-            return res.status(StatusCodes.FORBIDDEN).send('Incorrect Pass');
+            responseObject.msg = `Incorrect private key`;
+            return res.status(StatusCodes.FORBIDDEN).send(responseObject);
         }
 
         const decryptedData = await decrypt(encryptedData, key);
@@ -182,7 +213,11 @@ const openDrop = async (req, res) => {
             { $set: { timestamp: new Date(), openedBy: email } }
         );
 
-        return res.status(StatusCodes.OK).json({ decryptedData });
+        responseObject.msg = decryptedData;
+        responseObject.isVerified = true;
+
+        return res.status(StatusCodes.OK).send(responseObject);
+
     } catch (err) {
         console.log('Error Opening drop', err);
         process.exit(1);

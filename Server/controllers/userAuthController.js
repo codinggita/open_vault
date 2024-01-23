@@ -22,16 +22,23 @@ const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-res-obj-msg'
+        };
+
         // Check for null entries.
         if (!name || !email || !password) {
-            return res.status(StatusCodes.BAD_REQUEST).send("All fields required");
+            responseObject.msg = `All fields are required`;
+            return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
         // check if email already exists
         const oldUser = await User.findOne({ email });
 
         if (oldUser) {
-            return res.status(StatusCodes.CONFLICT).send(`User with email ${oldUser} already exits.`);
+            responseObject.msg = `User with email ${oldUser} already exits.`;
+            return res.status(StatusCodes.CONFLICT).send(responseObject);
         }
 
         // Create Hash Password to store in DB
@@ -44,10 +51,14 @@ const registerUser = async (req, res) => {
         const user = await User.create({ ...newData });
 
         // Generate AccessToken
-        const accessToken = user.generateAccessToken(secretKey);
+        const accessToken = await user.generateAccessToken(secretKey);
 
-        return res.status(StatusCodes.CREATED).json({ user, accessToken });
+        responseObject.isVerified = true;
+        responseObject.accessToken = accessToken;
+        responseObject.msg = `Logged in Successfully`;
+        responseObject.user = user;
 
+        return res.status(StatusCodes.OK).send(responseObject);
     } catch (err) {
         console.log("Error registering a new User", err);
         process.exit(1);
@@ -59,14 +70,21 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-res-obj-msg'
+        };
+
         if (!email || !password) {
-            return res.status(StatusCodes.BAD_REQUEST).send("ALL Fields Required");
+            responseObject.msg = `All fields are required`;
+            return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
         const oldUser = await User.findOne({ email });
 
         if (!oldUser) {
-            return res.status(StatusCodes.NO_CONTENT).send("Email Does not exist");
+            responseObject.msg = `Email Does not exist`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         const isPassCorrect = await bcrypt.compare(password, oldUser.password);
@@ -75,8 +93,16 @@ const loginUser = async (req, res) => {
 
             const accessToken = oldUser.generateAccessToken(secretKey);
 
-            return res.status(StatusCodes.OK).json({ oldUser, accessToken });
+            responseObject.isVerified = true;
+            responseObject.accessToken = accessToken;
+            responseObject.msg = `Logged in Successfully`;
+            responseObject.user = oldUser;
+
+            return res.status(StatusCodes.OK).send(responseObject);
         }
+
+        responseObject.msg = `Invalid Credentials`;
+        return res.status(StatusCodes.UNAUTHORIZED).send(responseObject);
 
     } catch (err) {
         console.log(`Error Logging in`, err);
@@ -87,7 +113,7 @@ const loginUser = async (req, res) => {
 // emailVerification
 const emailVerification = async (req, res) => {
     // TO DO: USE SMTP service.
-    res.status(StatusCodes.OK).send("OK");
+    return res.status(StatusCodes.OK).send("OK");
 };
 
 module.exports = { registerUser, loginUser, emailVerification };
