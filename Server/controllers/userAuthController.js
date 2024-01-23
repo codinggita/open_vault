@@ -13,6 +13,7 @@ const securePassword = async (password) => {
         return hashedPass;
     } catch (err) {
         console.log(`Error Hashing password`, err);
+        process.exit(1);
     }
 }
 

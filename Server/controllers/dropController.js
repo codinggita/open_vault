@@ -1,9 +1,20 @@
 const { StatusCodes } = require('http-status-codes');
 const { nanoid } = require('nanoid');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 const Drop = require("../models/drop");
 const User = require("./../models/user");
+
+const getSecureKey = async (key) => {
+    try {
+        let hashedKey = await bcrypt.hash(key, 10);
+        return hashedKey;
+    } catch (err) {
+        console.log(`Error Hashing password`, err);
+        process.exit(1);
+    }
+}
 
 const getUserEmail = async (id) => {
     try {
@@ -90,9 +101,6 @@ const createDrop = async (req, res) => {
             return res.status(StatusCodes.BAD_REQUEST).send('All Fields required');
         }
 
-        const mongoId = req.user.id;
-        const email = await getUserEmail(mongoId);
-
         const did = nanoid();
         const oldId = await Drop.findOne({ did });
 
@@ -109,11 +117,18 @@ const createDrop = async (req, res) => {
         // Encrypt data 
         const encryptedData = await encrypt(eData, keys.publicKey);
 
+        // Get User email
+        const mongoId = req.user.id;
+        const email = await getUserEmail(mongoId);
+
+        // Get secureKey
+        const secureKey = await getSecureKey(keys.privateKey);
+
         // Create entry
         const newData = {
             did,
             createdBy: email,
-            privateKey: keys.privateKey,
+            privateKey: secureKey,
             data: encryptedData
         }
 
@@ -152,7 +167,8 @@ const openDrop = async (req, res) => {
         const encryptedData = dataPresent.eData;
         const key = dataPresent.privateKey;
 
-        if (key != pass) {
+        const isKeyCorrect = await bcrypt.compare(key, pass);
+        if (!isKeyCorrect) {
             return res.status(StatusCodes.FORBIDDEN).send('Incorrect Pass');
         }
 
