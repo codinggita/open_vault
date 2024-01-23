@@ -53,15 +53,15 @@ const visitDrop = async (req, res) => {
         const drop = await Drop.findOne({ did });
 
         if (!drop) {
-            res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
+            return res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
         }
 
         const isOpened = drop.openedOn;
         if (isOpened) {
-            res.status(StatusCodes.GONE).send(`Drop already opened`);
+            return res.status(StatusCodes.GONE).send(`Drop already opened`);
         }
 
-        res.status(StatusCodes.OK).send(`Drop available, provide key`);
+        return res.status(StatusCodes.OK).send(`Drop available, provide key`);
     } catch (err) {
         console.log(`Error visiting(verifying drop)`, err);
         process.exit(1);
@@ -73,15 +73,15 @@ const createDrop = async (req, res) => {
         const { email, eData } = req.body;
 
         if (!email || !eData) {
-            res.status(StatusCodes.BAD_REQUEST).send('All Fields required');
+            return res.status(StatusCodes.BAD_REQUEST).send('All Fields required');
         }
 
         const did = nanoid();
-        const oldId = Drop.findOne({ did });
+        const oldId = await Drop.findOne({ did });
 
         while (!oldId) {
             did = nanoid();
-            oldId = Drop.findOne({ did });
+            oldId = await Drop.findOne({ did });
         }
 
         // did is unique.
@@ -105,7 +105,7 @@ const createDrop = async (req, res) => {
         // return private key and did to the user
         const pass = keys.privateKey;
 
-        req.status(StatusCodes.OK).json({ did, pass });
+        return req.status(StatusCodes.OK).json({ did, pass });
 
     } catch (err) {
         console.log(`Error creating drop`, err);
@@ -118,25 +118,25 @@ const openDrop = async (req, res) => {
         const { dId, pass, email } = req.body;
 
         if (!dId || !pass) {
-            res.status(StatusCodes.BAD_REQUEST).send("All fields required");
+            return res.status(StatusCodes.BAD_REQUEST).send("All fields required");
         }
 
         const dataPresent = Drop.findOne({ dId });
 
         if (!dataPresent) {
-            res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
+            return res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
         }
 
         // Check if data is already accessed. 
         if (dataPresent.openedOn) {
-            res.status(StatusCodes.NO_CONTENT).send(`Drop already looted`);
+            return res.status(StatusCodes.NO_CONTENT).send(`Drop already looted`);
         }
 
         const encryptedData = dataPresent.eData;
         const key = dataPresent.privateKey;
 
         if (key != pass) {
-            res.status(StatusCodes.FORBIDDEN).send('Incorrect Pass');
+            return res.status(StatusCodes.FORBIDDEN).send('Incorrect Pass');
         }
 
         const decryptedData = await decrypt(encryptedData, key);
@@ -146,7 +146,7 @@ const openDrop = async (req, res) => {
             { $set: { timestamp: new Date(), openedBy: email } }
         );
 
-        res.status(StatusCodes.OK).json({decryptedData});
+        return res.status(StatusCodes.OK).json({ decryptedData });
     } catch (err) {
         console.log('Error Opening drop', err);
         process.exit(1);

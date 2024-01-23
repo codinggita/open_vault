@@ -56,16 +56,16 @@ const registerUser = async (req, res) => {
 // loginUser
 const loginUser = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
 
         if (!email || !password) {
             return res.status(StatusCodes.BAD_REQUEST).send("ALL Fields Required");
         }
 
-        const oldUser = await User.findOne({email});
+        const oldUser = await User.findOne({ email });
 
         if (!oldUser) {
-            res.status(StatusCodes.NO_CONTENT).send("Email Does not exist");
+            return res.status(StatusCodes.NO_CONTENT).send("Email Does not exist");
         }
 
         const isPassCorrect = await bcrypt.compare(password, oldUser.password);
@@ -73,8 +73,8 @@ const loginUser = async (req, res) => {
         if (isPassCorrect) {
 
             const accessToken = oldUser.generateAccessToken(secretKey);
-             
-            return res.status(StatusCodes.OK).json({oldUser, accessToken});
+
+            return res.status(StatusCodes.OK).json({ oldUser, accessToken });
         }
 
     } catch (err) {
