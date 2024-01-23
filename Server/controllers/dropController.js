@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const { nanoid } = require('nanoid');
+const uuid = require('uuid');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
@@ -118,11 +118,12 @@ const createDrop = async (req, res) => {
             return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
-        const did = nanoid();
+        
+        const did = uuid.v4().replace(/-/g, '').substring(0, 10);
         const oldId = await Drop.findOne({ did });
 
         while (!oldId) {
-            did = nanoid();
+            did = uniqid();
             oldId = await Drop.findOne({ did });
         }
 
