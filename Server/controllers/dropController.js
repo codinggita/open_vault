@@ -2,7 +2,21 @@ const { StatusCodes } = require('http-status-codes');
 const { nanoid } = require('nanoid');
 const crypto = require('crypto');
 
-const Drop = require("./../models/Drop");
+const Drop = require("../models/drop");
+const User = require("./../models/user");
+
+const getUserEmail = async (id) => {
+    try {
+        const user = await User.findById(id);
+        if (!user) throw new Error('Id not found.');
+
+        const email = user.email;
+        return email;
+    } catch (err) {
+        console.log('Error Fetching email from db', err);
+        process.exit(1);
+    }
+};
 
 const generateKey = async () => {
     try {
@@ -45,7 +59,7 @@ const decrypt = async (encryptedData, privateKey) => {
         console.log(`Error Decrypting data`, err);
         process.exit(1);
     }
-}
+};
 
 const visitDrop = async (req, res) => {
     try {
@@ -66,15 +80,18 @@ const visitDrop = async (req, res) => {
         console.log(`Error visiting(verifying drop)`, err);
         process.exit(1);
     }
-}
+};
 
 const createDrop = async (req, res) => {
     try {
-        const { email, eData } = req.body;
+        const { eData } = req.body;
 
-        if (!email || !eData) {
+        if (!eData) {
             return res.status(StatusCodes.BAD_REQUEST).send('All Fields required');
         }
+
+        const mongoId = req.user.id;
+        const email = await getUserEmail(mongoId);
 
         const did = nanoid();
         const oldId = await Drop.findOne({ did });
@@ -111,11 +128,11 @@ const createDrop = async (req, res) => {
         console.log(`Error creating drop`, err);
         process.exit(1);
     }
-}
+};
 
 const openDrop = async (req, res) => {
     try {
-        const { dId, pass, email } = req.body;
+        const { dId, pass } = req.body;
 
         if (!dId || !pass) {
             return res.status(StatusCodes.BAD_REQUEST).send("All fields required");
@@ -141,6 +158,9 @@ const openDrop = async (req, res) => {
 
         const decryptedData = await decrypt(encryptedData, key);
 
+        const mongoId = req.user.id;
+        const email = await getUserEmail(mongoId);
+
         const updatedActivity = await UserActivity.updateOne(
             { did: dId },
             { $set: { timestamp: new Date(), openedBy: email } }
@@ -151,6 +171,6 @@ const openDrop = async (req, res) => {
         console.log('Error Opening drop', err);
         process.exit(1);
     }
-}
+};
 
 module.exports = { visitDrop, createDrop, openDrop };
