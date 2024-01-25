@@ -204,7 +204,7 @@ const openDrop = async (req, res) => {
             return res.status(StatusCodes.FORBIDDEN).send(responseObject);
         }
 
-        const decryptedData = await decrypt(encryptedData, key);
+        const decryptedData = await decrypt(encryptedData, pass);
 
         const mongoId = req.user.id;
         const email = await getUserEmail(mongoId);
