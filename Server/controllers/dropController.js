@@ -1,8 +1,33 @@
 const { StatusCodes } = require('http-status-codes');
-const { nanoid } = require('nanoid');
+const uuid = require('uuid');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
-const Drop = require("./../models/Drop");
+const Drop = require("../models/drop");
+const User = require("./../models/user");
+
+const getSecureKey = async (key) => {
+    try {
+        let hashedKey = await bcrypt.hash(key, 10);
+        return hashedKey;
+    } catch (err) {
+        console.log(`Error Hashing password`, err);
+        process.exit(1);
+    }
+}
+
+const getUserEmail = async (id) => {
+    try {
+        const user = await User.findById(id);
+        if (!user) throw new Error('Id not found.');
+
+        const email = user.email;
+        return email;
+    } catch (err) {
+        console.log('Error Fetching email from db', err);
+        process.exit(1);
+    }
+};
 
 const generateKey = async () => {
     try {
@@ -45,43 +70,61 @@ const decrypt = async (encryptedData, privateKey) => {
         console.log(`Error Decrypting data`, err);
         process.exit(1);
     }
-}
+};
 
 const visitDrop = async (req, res) => {
     try {
         const did = req.params.did;
         const drop = await Drop.findOne({ did });
 
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-obj-msg'
+        };
+
         if (!drop) {
-            res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
+            responseObject.msg = `Drop with id: ${did} is invalid or expired.`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         const isOpened = drop.openedOn;
         if (isOpened) {
-            res.status(StatusCodes.GONE).send(`Drop already opened`);
+            responseObject.msg = `Drop with id: ${did} is already looted`;
+            return res.status(StatusCodes.GONE).send(responseObject);
         }
 
-        res.status(StatusCodes.OK).send(`Drop available, provide key`);
+        responseObject.isVerified = true;
+        responseObject.msg = `Drop with id: ${did} is available, provide Key`;
+
+        return res.status(StatusCodes.OK).send(responseObject);
+
     } catch (err) {
         console.log(`Error visiting(verifying drop)`, err);
         process.exit(1);
     }
-}
+};
 
 const createDrop = async (req, res) => {
     try {
-        const { email, eData } = req.body;
+        const { eData } = req.body;
 
-        if (!email || !eData) {
-            res.status(StatusCodes.BAD_REQUEST).send('All Fields required');
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-obj-msg'
+        };
+
+        if (!eData) {
+            responseObject.msg = `All fields are required`;
+            return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
-        const did = nanoid();
-        const oldId = Drop.findOne({ did });
+        
+        const did = uuid.v4().replace(/-/g, '').substring(0, 10);
+        const oldId = await Drop.findOne({ did });
 
         while (!oldId) {
-            did = nanoid();
-            oldId = Drop.findOne({ did });
+            did = uniqid();
+            oldId = await Drop.findOne({ did });
         }
 
         // did is unique.
@@ -92,11 +135,18 @@ const createDrop = async (req, res) => {
         // Encrypt data 
         const encryptedData = await encrypt(eData, keys.publicKey);
 
+        // Get User email
+        const mongoId = req.user.id;
+        const email = await getUserEmail(mongoId);
+
+        // Get secureKey
+        const secureKey = await getSecureKey(keys.privateKey);
+
         // Create entry
         const newData = {
             did,
             createdBy: email,
-            privateKey: keys.privateKey,
+            privateKey: secureKey,
             data: encryptedData
         }
 
@@ -105,52 +155,74 @@ const createDrop = async (req, res) => {
         // return private key and did to the user
         const pass = keys.privateKey;
 
-        req.status(StatusCodes.OK).json({ did, pass });
+        responseObject.isVerified = true;
+        responseObject.did = did;
+        responseObject.msg = `Drop created Successfully`;
+        responseObject.pass = pass;
+
+        return res.status(StatusCodes.OK).send(responseObject);
 
     } catch (err) {
         console.log(`Error creating drop`, err);
         process.exit(1);
     }
-}
+};
 
 const openDrop = async (req, res) => {
     try {
-        const { dId, pass, email } = req.body;
+        const { dId, pass } = req.body;
+
+        const responseObject = {
+            isVerified: false,
+            msg: 'default-obj-msg'
+        };
 
         if (!dId || !pass) {
-            res.status(StatusCodes.BAD_REQUEST).send("All fields required");
+            responseObject.msg = `All fields required`;
+            return res.status(StatusCodes.BAD_REQUEST).send(responseObject);
         }
 
         const dataPresent = Drop.findOne({ dId });
 
         if (!dataPresent) {
-            res.status(StatusCodes.NO_CONTENT).send(`Drop expired or Invalid`);
+            responseObject.msg = `Drop with id: ${did} is invalid or expired.`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         // Check if data is already accessed. 
         if (dataPresent.openedOn) {
-            res.status(StatusCodes.NO_CONTENT).send(`Drop already looted`);
+            responseObject.msg = `Drop with id: ${did} is already looted.`;
+            return res.status(StatusCodes.NO_CONTENT).send(responseObject);
         }
 
         const encryptedData = dataPresent.eData;
         const key = dataPresent.privateKey;
 
-        if (key != pass) {
-            res.status(StatusCodes.FORBIDDEN).send('Incorrect Pass');
+        const isKeyCorrect = await bcrypt.compare(key, pass);
+        if (!isKeyCorrect) {
+            responseObject.msg = `Incorrect private key`;
+            return res.status(StatusCodes.FORBIDDEN).send(responseObject);
         }
 
         const decryptedData = await decrypt(encryptedData, key);
+
+        const mongoId = req.user.id;
+        const email = await getUserEmail(mongoId);
 
         const updatedActivity = await UserActivity.updateOne(
             { did: dId },
             { $set: { timestamp: new Date(), openedBy: email } }
         );
 
-        res.status(StatusCodes.OK).json({decryptedData});
+        responseObject.msg = decryptedData;
+        responseObject.isVerified = true;
+
+        return res.status(StatusCodes.OK).send(responseObject);
+
     } catch (err) {
         console.log('Error Opening drop', err);
         process.exit(1);
     }
-}
+};
 
 module.exports = { visitDrop, createDrop, openDrop };

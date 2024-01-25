@@ -14,7 +14,7 @@ const authenticate = async (req, res, next) => {
         next();
     } catch (err) {
         console.log('Error verifying the access token', err);
-        res.status(StatusCodes.MISDIRECTED_REQUEST).send('You are not authorized to access this route');
+        return res.status(StatusCodes.MISDIRECTED_REQUEST).send('You are not authorized to access this route');
     }
 }
 
