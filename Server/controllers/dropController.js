@@ -6,6 +6,26 @@ const bcrypt = require('bcryptjs');
 const Drop = require("../models/drop");
 const User = require("./../models/user");
 
+
+const crypto = require('crypto');
+
+const generatePassword = async (length) => {
+    try {
+        const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
+        let password = '';
+        
+        for (let i = 0; i < length; i++) {
+          const randomIndex = crypto.randomInt(charset.length);
+          password += charset[randomIndex];
+        }
+        
+        return password;
+    } catch (err) {
+        console.log("Error Generating password", err);
+        process.exit(1);
+    }
+}
+
 const getSecureKey = async (key) => {
     try {
         let hashedKey = await bcrypt.hash(key, 10);
@@ -33,7 +53,7 @@ const generateKey = async () => {
     try {
         // Generate key pair using the 'rsa' algorithm
         const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-            modulusLength: 1024, // The length of the key in bits
+            modulusLength: 1048, // The length of the key in bits
             publicKeyEncoding: {
                 type: 'spki', // SubjectPublicKeyInfo (SPKI)
                 format: 'pem', // Privacy-Enhanced Mail (PEM)
@@ -122,8 +142,8 @@ const createDrop = async (req, res) => {
         const did = uuid.v4().replace(/-/g, '').substring(0, 10);
         const oldId = await Drop.findOne({ did });
 
-        while (!oldId) {
-            did = uniqid();
+        while (oldId) {
+            did = uuid.v4().replace(/-/g, '').substring(0, 10);
             oldId = await Drop.findOne({ did });
         }
 
@@ -139,15 +159,19 @@ const createDrop = async (req, res) => {
         const mongoId = req.user.id;
         const email = await getUserEmail(mongoId);
 
+        // Generate Password
+        const password = await generatePassword(12);
+
         // Get secureKey
-        const secureKey = await getSecureKey(keys.privateKey);
+        const secureKey = await getSecureKey(password);
 
         // Create entry
         const newData = {
             did,
             createdBy: email,
-            privateKey: secureKey,
-            data: encryptedData
+            privateKey: keys.privateKey,
+            data: encryptedData,
+            pass: secureKey
         }
 
         const drop = await Drop.create({ ...newData });
@@ -158,7 +182,7 @@ const createDrop = async (req, res) => {
         responseObject.isVerified = true;
         responseObject.did = did;
         responseObject.msg = `Drop created Successfully`;
-        responseObject.pass = pass;
+        responseObject.pass = password;
 
         return res.status(StatusCodes.OK).send(responseObject);
 
@@ -197,14 +221,15 @@ const openDrop = async (req, res) => {
 
         const encryptedData = dataPresent.eData;
         const key = dataPresent.privateKey;
+        const savedPass = dataPresent.pass;
 
-        const isKeyCorrect = await bcrypt.compare(key, pass);
+        const isKeyCorrect = await bcrypt.compare(savedPass, pass);
         if (!isKeyCorrect) {
-            responseObject.msg = `Incorrect private key`;
+            responseObject.msg = `Incorrect password`;
             return res.status(StatusCodes.FORBIDDEN).send(responseObject);
         }
 
-        const decryptedData = await decrypt(encryptedData, pass);
+        const decryptedData = await decrypt(encryptedData, key);
 
         const mongoId = req.user.id;
         const email = await getUserEmail(mongoId);
