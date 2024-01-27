@@ -6,9 +6,6 @@ const bcrypt = require('bcryptjs');
 const Drop = require("../models/drop");
 const User = require("./../models/user");
 
-
-const crypto = require('crypto');
-
 const generatePassword = async (length) => {
     try {
         const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>?';
