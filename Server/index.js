@@ -28,6 +28,7 @@ app.get("/", (req, res)=>{
 // Router
 app.use("/user/auth", userAuthRouter);
 app.use("/drop", authenticate, dropRouter);
+app.use("/log", authenticate, logRouter);
 
 const start = async () => {
     try {
