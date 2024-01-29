@@ -2,11 +2,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
 
 // Import Modules
 const {connectDB, disconnectDB} = require('./db/connect');
 const userAuthRouter = require('./routes/userAuthRouters');
 const dropRouter = require('./routes/dropRouter');
+const logRouter = require('./routes/logRouter');
 const authenticate = require('./middlewares/authenticate');
 
 
@@ -16,13 +18,18 @@ const port = process.env.PORT || 5500;
 const mongoURI = process.env.MONGO_URI;
 const live = process.env.LIVE;
 
+const publicDirectoryPath = path.join(__dirname, 'public');
+
+// Get an instance of express.
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(publicDirectoryPath));
 
+// Serve the root 
 app.get("/", (req, res)=>{
-    res.send("OpenVault");
+    res.status(200).sendFile(path.join(publicDirectoryPath, 'index.html'));
 });
 
 // Router
