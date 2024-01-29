@@ -5,7 +5,7 @@ const {createDrop, visitDrop, openDrop} = require("./../controllers/dropControll
 
 router.get("/:did", visitDrop);
 router.post("/create", createDrop);
-router.post("/open", openDrop);
+router.put("/open", openDrop);
 
 
 module.exports = router;

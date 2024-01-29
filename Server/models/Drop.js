@@ -26,6 +26,9 @@ const dropSchema = new mongoose.Schema(
         },
         data: {
             type: String
+        },
+        pass: {
+            type: String
         }
     }
 );
