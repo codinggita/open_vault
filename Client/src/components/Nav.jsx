@@ -9,14 +9,14 @@ function Nav() {
   return (
     <>
       <div>
-        <a href="https://openvault.onrender.com/" target="_blank">
+        <Link href="https://openvault.onrender.com/" target="_blank">
           <img src={openVaultLogo} className="logo react" alt="openVault logo" />
-        </a>
+        </Link>
       </div>
       {/* <h1>Open Vault</h1> */}
       <div className="card">
         <p>
-          <Link to="/">Home</Link> | <Link to="/users">Users</Link> | <Link to="/about">About</Link>
+          <Link to="/">Home</Link> | <Link to="/users">Users</Link> | <Link to="/about">About</Link> | <Link to="/signIn">SignIn</Link>
         </p>
       </div>
     </>
