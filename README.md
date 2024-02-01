@@ -1,5 +1,8 @@
 # openVault
 
+Backend Deployment Link: [https://openvault.onrender.com/](https://openvault.onrender.com/)
+Frontend Deployment Link: [https://openvault.netlify.app/](https://openvault.netlify.app/)
+
 The OpenVault project aims to address the need for secure and controlled data sharing among users. It focuses on providing a platform where users can share files with encryption using public and private keys. The project seeks to enhance privacy and security in file sharing, similar to services like Dropbox, but with an added emphasis on encryption and secure access control. By allowing users to encrypt files and share them with specific individuals who possess the necessary keys, OpenVault addresses concerns related to unauthorized access and enhances the overall confidentiality of shared data. The feature of automatically deleting files after access adds an extra layer of security and privacy to the shared content.
 
 
