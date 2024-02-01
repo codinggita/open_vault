@@ -1,15 +1,20 @@
 import React from 'react'
+import Stat from './Stat'
+import { Box, Link } from '@mui/material'
 
-import './../App.css'
-import openVaultLogo from './../assets/openvault_logo.svg'
-
-import {Link} from 'react-router-dom'
+import Hero from './Hero'
 
 function Home() {
   return (
-    <div>
-      Home
-    </div>
+    <Box className="Home" sx={{
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column"
+    }}>
+      <Hero />
+      <Stat />
+    </Box>
   )
 }
 
