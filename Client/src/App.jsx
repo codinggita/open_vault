@@ -1,13 +1,12 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 
-import Home from './components/Home'
-import Users from './components/Users'
-import About from './components/About'
-import Nav from './components/Nav'
-import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
-import Footer from './components/Footer'
+import Home from './components/Home/Home'
+import Users from './components/Profile/Users'
+import About from './components/Home/About'
+import Nav from './components/Home/Nav'
+import SignIn from './components/Login/SignIn'
+import SignUp from './components/Login/SignUp'
+import Footer from './components/Home/Footer'
 
 import './App.css'
 
