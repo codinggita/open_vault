@@ -26,7 +26,6 @@ const Footer = () => {
           padding: '20px',
           marginTop: 'auto',
           textAlign: 'center',
-          background: '#242424',
           display: 'flex',
         }}
       >

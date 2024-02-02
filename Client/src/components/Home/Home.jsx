@@ -1,10 +1,15 @@
 import React from 'react'
 
+import Hero from './Hero'
+import Stat from './Stat'
+
 function Home() {
   return (
-    <div>
-      Home
-    </div>
+    <>
+      <Hero />
+      <Stat />
+
+    </>
   )
 }
 
