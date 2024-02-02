@@ -1,7 +1,7 @@
 import React from 'react'
 import Typography from '@mui/material/Typography'
 
-import openVaultLogo from './../assets/openvault_logo.svg'
+import openVaultLogo from './../../assets/openvault_logo.svg'
 
 const Logo = () => {
     return (

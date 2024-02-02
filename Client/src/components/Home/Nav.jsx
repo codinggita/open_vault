@@ -11,10 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import navLogo from './../assets/navBarLogo.svg'
+import navLogo from './../../assets/navBarLogo.svg'
 
 const defaultTheme = createTheme({
   palette: {

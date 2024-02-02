@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import Logo from './Logo';
+import Logo from '../accessibility/Logo';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
