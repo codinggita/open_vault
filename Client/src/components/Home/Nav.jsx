@@ -21,7 +21,7 @@ const defaultTheme = createTheme({
   }
 });
 
-const pages = ['Products', 'Pricing', 'Blog', 'Dummy', 'More'];
+const pages = ['SignUP', 'SignIn', 'Blog', 'Dummy', 'More'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
