@@ -32,20 +32,32 @@ export default function Encrypt() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="l">
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: 10,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        minHeight: '70vh'
                     }}
                 >
-                    {/* <Typography component="h1" variant="h6" sx={{ color: '#90caf9' }}>
-                        Sign in
-                    </Typography> */}
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box
+                        sx={{
+                            width: { xs: '100%', md: '70%' },
+                            mt: 1
+                        }}
+                    >
+                        <Typography variant='h4' sx={{ color: '#90caf9' }}>Encrypt</Typography>
+                        <Typography sx={{ color: 'white', mt: 3 }}>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione corrupti sunt quo, sit reprehenderit fuga rem laudantium accusantium eos, placeat alias neque, veritatis tempora? Repellat, consequatur architecto. Modi, labore error!
+                        </Typography>
+                    </Box>
+                    <Box component="form" onSubmit={handleSubmit} sx={{
+                        mt: 3, border: 'solid', borderColor: '#90caf9', p: 2,
+                        width: { xs: '90%', md: '30%' }
+                    }}>
                         <Grid container>
                             <Grid item>
                                 <Link href="/signUp" variant="body2">
@@ -62,6 +74,7 @@ export default function Encrypt() {
                             name="file"
                             type='file'
                             autoFocus
+                            display='none'
                         />
 
                         <TextField
@@ -69,7 +82,7 @@ export default function Encrypt() {
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="New Password"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -81,7 +94,7 @@ export default function Encrypt() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            Encrypt
                         </Button>
 
                         <Grid container>
