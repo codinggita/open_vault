@@ -61,7 +61,7 @@ export default function SignIn() {
                     {/* <Typography component="h1" variant="h6" sx={{ color: '#90caf9' }}>
                         Sign in
                     </Typography> */}
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required

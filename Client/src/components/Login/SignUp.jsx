@@ -61,7 +61,7 @@ export default function SignUp() {
                     {/* <Typography component="h1" variant="h6" sx={{ color: '##90caf9' }}>
                         Sign up
                     </Typography> */}
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} >
                                 <TextField
