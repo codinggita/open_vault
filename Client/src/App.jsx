@@ -9,6 +9,8 @@ import SignUp from './components/Login/SignUp'
 import Footer from './components/Home/Footer'
 
 import './App.css'
+import Encrypt from './components/Feature/Encrypt'
+import Drop from './components/Feature/Drop'
 
 
 function App() {
@@ -28,6 +30,9 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/signUp" element={<SignUp />} />
+        <Route path="/encrypt" element={<Encrypt />} />
+        <Route path="/drop" element={<Drop />} />
+        <Route path="/drop" element={<Drop />} />
       </Routes>
       <div>
         {
