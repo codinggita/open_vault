@@ -6,14 +6,14 @@ import About from './About'
 import Encrypt from '../Feature/Encrypt'
 
 function Home() {
-  return (
-    <>
-      <Hero />
-      <Stat />
-      <About />
-      <Encrypt />
-    </>
-  )
+    return (
+        <>
+            <Hero />
+            <Stat />
+            <About />
+            <Encrypt />
+        </>
+    )
 }
 
 export default Home

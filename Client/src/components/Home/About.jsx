@@ -1,111 +1,98 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import Logo from '../accessibility/Logo';
-import { useNavigate } from 'react-router-dom';
 
 import svg1 from './../../assets/aboutSVG1.svg';
 import svg2 from './../../assets/aboutSVG2.svg';
 
 const defaultTheme = createTheme({
-	palette: {
-		mode: "dark",
-	}
+    palette: {
+        mode: "dark",
+    }
 });
 
 export default function About() {
 
-	return (
-		<ThemeProvider theme={defaultTheme}>
-			<Container component="main" maxWidth="xl">
-				<CssBaseline />
-				{/* <Box
-					sx={{
-						marginTop: '4vh'
-					}}
-				>
-					<Typography variant='h3'>Features</Typography>
-				</Box> */}
-				<Box
-					sx={{
-						display: 'flex',
-						alignItems: 'center',
-						padding: { xs: '2vh', md: ' 2vh 10vh' },
-						flexDirection: { xs: 'column-reverse', md: 'row' }
-					}}
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <Container component="main" maxWidth="xl">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: { xs: '2vh', md: ' 2vh 10vh' },
+                        flexDirection: { xs: 'column-reverse', md: 'row' }
+                    }}
 
-				>
-					{/* Description 1 */}
+                >
+                    {/* Description 1 */}
 
-					<Box
+                    <Box
 
-						sx={{
-							display: 'flex',
-							flexDirection: 'column',
-							width: {xs: '90%', md: '50%'}
-						}}
-					>
-						<Typography variant='h5' color={'#90caf9'}> Encrypt Files</Typography>
-						<Typography>
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione corrupti sunt quo, sit reprehenderit fuga rem laudantium accusantium eos, placeat alias neque, veritatis tempora? Repellat, consequatur architecto. Modi, labore error!
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: { xs: '90%', md: '50%' }
+                        }}
+                    >
+                        <Typography variant='h5' color={'#90caf9'}> Encrypt Files</Typography>
+                        <Typography>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione corrupti sunt quo, sit reprehenderit fuga rem laudantium accusantium eos, placeat alias neque, veritatis tempora? Repellat, consequatur architecto. Modi, labore error!
 
-						</Typography>
-					</Box>
-					<Box
-						sx={{
-							justifyContent: 'center',
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            justifyContent: 'center',
 
-						}}
-					>
-						<img src={svg1} alt="" style={{ width: '80%' }} />
-					</Box>
-					{/* Description 2 */}
-				</Box>
+                        }}
+                    >
+                        <img src={svg1} alt="" style={{ width: '80%' }} />
+                    </Box>
+                    {/* Description 2 */}
+                </Box>
 
-				<Box
-					sx={{
-						display: 'flex',
-						alignItems: 'center',
-						padding: { xs: '2vh', md: ' 2vh 10vh' },
-						flexDirection: { xs: 'column', md: 'row' }
-					}}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: { xs: '2vh', md: ' 2vh 10vh' },
+                        flexDirection: { xs: 'column', md: 'row' }
+                    }}
 
-				>
-					{/* Description 1 */}
-					<Box
-						sx={{
-							justifyContent: 'center',
+                >
+                    {/* Description 1 */}
+                    <Box
+                        sx={{
+                            justifyContent: 'center',
 
-						}}
-					>
-						<img src={svg2} alt="" style={{ width: '80%' }} />
-					</Box>
+                        }}
+                    >
+                        <img src={svg2} alt="" style={{ width: '80%' }} />
+                    </Box>
 
-					<Box
+                    <Box
 
-						sx={{
-							display: 'flex',
-							flexDirection: 'column',
-							width: {xs: '90%', md: '50%'}
-						}}
-					>
-						<Typography variant='h5' color={'#90caf9'}> Create Drop</Typography>
-						<Typography>
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione corrupti sunt quo, sit reprehenderit fuga rem laudantium accusantium eos, placeat alias neque, veritatis tempora? Repellat, consequatur architecto. Modi, labore error!
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: { xs: '90%', md: '50%' }
+                        }}
+                    >
+                        <Typography variant='h5' color={'#90caf9'}> Create Drop</Typography>
+                        <Typography>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ratione corrupti sunt quo, sit reprehenderit fuga rem laudantium accusantium eos, placeat alias neque, veritatis tempora? Repellat, consequatur architecto. Modi, labore error!
 
-						</Typography>
-					</Box>
-					{/* Description 2 */}
-				</Box>
-			</Container>
-		</ThemeProvider>
-	);
+                        </Typography>
+                    </Box>
+                    {/* Description 2 */}
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
 }
