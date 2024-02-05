@@ -14,34 +14,34 @@ import Drop from './components/Feature/Drop'
 
 
 function App() {
-  const location = useLocation()
-  const currentPath = location.pathname
+    const location = useLocation()
+    const currentPath = location.pathname
 
-  return (
-    <>
-      <div>
-        {
-          currentPath !== '/signIn' && currentPath !== '/signUp' && <Nav />
-        }
-      </div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/signIn" element={<SignIn />} />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route path="/encrypt" element={<Encrypt />} />
-        <Route path="/drop" element={<Drop />} />
-        <Route path="/drop" element={<Drop />} />
-      </Routes>
-      <div>
-        {
-          currentPath !== '/signIn' && currentPath !== '/signUp' && <Footer />
-        }
-      </div>
+    return (
+        <>
+            <div>
+                {
+                    currentPath !== '/signIn' && currentPath !== '/signUp' && <Nav />
+                }
+            </div>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/signIn" element={<SignIn />} />
+                <Route path="/signUp" element={<SignUp />} />
+                <Route path="/encrypt" element={<Encrypt />} />
+                <Route path="/drop" element={<Drop />} />
+                <Route path="/drop" element={<Drop />} />
+            </Routes>
+            <div>
+                {
+                    currentPath !== '/signIn' && currentPath !== '/signUp' && <Footer />
+                }
+            </div>
 
-    </>
-  )
+        </>
+    )
 }
 
 export default App

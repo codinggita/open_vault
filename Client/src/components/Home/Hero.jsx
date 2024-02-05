@@ -7,46 +7,46 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
 const defaultTheme = createTheme({
-  palette: {
-    mode: "dark",
-  }
+    palette: {
+        mode: "dark",
+    }
 });
 
 export default function Hero() {
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="l">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 10,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginBottom: 20
-          }}
-        >
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ m: 3 }}
-            >
-              Encrypt File
-            </Button>
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <Container component="main" maxWidth="l">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 10,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginBottom: 20
+                    }}
+                >
+                    <Box component="form" noValidate sx={{ mt: 1 }}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ m: 3 }}
+                        >
+                            Encrypt File
+                        </Button>
 
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ m: 3 }}
-            >
-              Access Drop
-            </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ m: 3 }}
+                        >
+                            Access Drop
+                        </Button>
 
-            <Typography sx={{color: '#90caf9'}}>Encrypt Files |  Share Private Data</Typography>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
-  );
+                        <Typography sx={{ color: '#90caf9' }}>Encrypt Files |  Share Private Data</Typography>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
 }
