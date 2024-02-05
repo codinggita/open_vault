@@ -27,13 +27,6 @@ export default function About() {
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xl">
                 <CssBaseline />
-                {/* <Box
-					sx={{
-						marginTop: '4vh'
-					}}
-				>
-					<Typography variant='h3'>Features</Typography>
-				</Box> */}
                 <Box
                     sx={{
                         display: 'flex',
