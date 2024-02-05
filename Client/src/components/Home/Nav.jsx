@@ -21,8 +21,11 @@ const defaultTheme = createTheme({
     }
 });
 
-const pages = ['SignUP', 'SignIn', 'Blog', 'Dummy', 'More'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import avt from './../../assets/avatarSVG.svg';
+
+const pages = ['Drop', 'Encrypt', 'About', 'Contact'];
+const links = ['./drop', './encrypt', './about', './contact'];
+const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -52,7 +55,7 @@ function ResponsiveAppBar() {
                             variant="h6"
                             noWrap
                             component="a"
-                            href="#app-bar-with-responsive-menu"
+                            href="/"
                             sx={{
                                 mr: 2,
                                 display: { xs: 'none', md: 'flex' },
@@ -106,7 +109,7 @@ function ResponsiveAppBar() {
                             variant="h5"
                             noWrap
                             component="a"
-                            href="#app-bar-with-responsive-menu"
+                            href="/"
                             sx={{
                                 mr: 2,
                                 display: { xs: 'flex', md: 'none' },
@@ -134,8 +137,8 @@ function ResponsiveAppBar() {
 
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, border: 'solid 0.1px #90ca9f'}}>
+                                    <Avatar alt="Remy Sharp" src={avt}/>
                                 </IconButton>
                             </Tooltip>
                             <Menu
