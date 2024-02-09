@@ -10,6 +10,7 @@ import SignUp from "../components/Login/SignUp";
 import SignIn from "../components/Login/SignIn";
 import OpenDrop from "../components/Feature/OpenDrop";
 import NotFound from "../components/accessibility/NotFound";
+import Layout from "../components/Layout/Layout";
 
 const Routes = () => {
 	const { token } = useAuth();
@@ -17,45 +18,57 @@ const Routes = () => {
 	// Define public routes accessible to all users
 	const routesForPublic = [
 		{
-			path: "/",
-			element: <Home />,
-		},
-		{
-			path: "/encrypt",
-			element: <Encrypt />,
-		},
-		{
-			path: "/about",
-			element: <About />,
+			path: "",
+			element: <Layout />,
+			children: [
+				{
+					path: "/",
+					element: <Home />,
+				},
+				{
+					path: "/encrypt",
+					element: <Encrypt />,
+				},
+				{
+					path: "/about",
+					element: <About />,
+				},
+			],
 		},
 	];
 
 	// Define routes accessible only to authenticated users
 	const routesForAuthenticatedOnly = [
-		{
-			path: "/drop",
-			element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
-			children: [
-				{
-					path: "/drop/",
-					element: <Drop />,
-				},
-				{
-					path: "/drop/:did",
-					element: <OpenDrop />,
-				},
-			],
-		},
-		{
-			path: "/user",
-			element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
-			children: [
-				{
-					path: "/user/:profile",
-					element: <div>User Profile</div>,
-				}
-			],
-		},
+        {
+            path: "",
+            element: <Layout />,
+            children: [
+                {
+                    path: "/drop",
+                    element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+                    children: [
+                        {
+                            path: "/drop/",
+                            element: <Drop />,
+                        },
+                        {
+                            path: "/drop/*",
+                            element: <OpenDrop />,
+                        },
+                    ],
+                },
+                {
+                    path: "/user",
+                    element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+                    children: [
+                        {
+                            path: "/user/:profile",
+                            element: <div>User Profile</div>,
+                        },
+                    ],
+                },
+            ]
+        }
 	];
 
 	// Define routes accessible only to non-authenticated users
@@ -70,27 +83,27 @@ const Routes = () => {
 		},
 	];
 
-    const routeForNotFound=[
-        // {
-        //     path:"/signUp",
-        //     element: <NotFound />
-        // },
-        // {
-        //     path:"/signIn",
-        //     element: <NotFound />
-        // },
-        {
-            path:"*",
-            element:<NotFound />
-        }
-    ]
+	const routeForNotFound = [
+		// {
+		//     path:"/signUp",
+		//     element: <NotFound />
+		// },
+		// {
+		//     path:"/signIn",
+		//     element: <NotFound />
+		// },
+		{
+			path: "*",
+			element: <NotFound />,
+		},
+	];
 
 	// Combine and conditionally include routes based on authentication status
 	const router = createBrowserRouter([
 		...routesForPublic,
 		...(!token ? routesForNotAuthenticatedOnly : []),
 		...routesForAuthenticatedOnly,
-        ...routeForNotFound
+		...routeForNotFound,
 	]);
 
 	// Provide the router configuration using RouterProvider
