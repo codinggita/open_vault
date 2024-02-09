@@ -9,6 +9,7 @@ const {connectDB, disconnectDB} = require('./db/connect');
 const userAuthRouter = require('./routes/userAuthRouters');
 const dropRouter = require('./routes/dropRouter');
 const logRouter = require('./routes/logRouter');
+const publicRouter = require('./routes/publicRouter');
 const authenticate = require('./middlewares/authenticate');
 
 
@@ -36,6 +37,7 @@ app.get("/", (req, res)=>{
 app.use("/user/auth", userAuthRouter);
 app.use("/drop", authenticate, dropRouter);
 app.use("/log", authenticate, logRouter);
+app.use("/public", publicRouter);
 
 const start = async () => {
     try {
