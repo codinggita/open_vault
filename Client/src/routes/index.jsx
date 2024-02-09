@@ -9,6 +9,7 @@ import Drop from "./../components/Feature/Drop";
 import SignUp from "../components/Login/SignUp";
 import SignIn from "../components/Login/SignIn";
 import OpenDrop from "../components/Feature/OpenDrop";
+import NotFound from "../components/accessibility/NotFound";
 
 const Routes = () => {
 	const { token } = useAuth();
@@ -69,11 +70,27 @@ const Routes = () => {
 		},
 	];
 
+    const routeForNotFound=[
+        // {
+        //     path:"/signUp",
+        //     element: <NotFound />
+        // },
+        // {
+        //     path:"/signIn",
+        //     element: <NotFound />
+        // },
+        {
+            path:"*",
+            element:<NotFound />
+        }
+    ]
+
 	// Combine and conditionally include routes based on authentication status
 	const router = createBrowserRouter([
 		...routesForPublic,
 		...(!token ? routesForNotAuthenticatedOnly : []),
 		...routesForAuthenticatedOnly,
+        ...routeForNotFound
 	]);
 
 	// Provide the router configuration using RouterProvider
