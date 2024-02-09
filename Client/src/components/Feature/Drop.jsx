@@ -101,38 +101,7 @@ export default function Hero() {
                         }}
                     >
 
-                        <Typography variant='h4' sx={{ color: '#90caf9' }}>File Encrypted</Typography>
-                        <Typography align='center' sx={{ color: 'white', mt: 1 }}>
-                            Your file has been successfully encrypted with the provided password.
-                        </Typography>
-
-                        <Box component="form" sx={{
-                            p: 2,
-                            width: '70%'
-                        }}>
-
-                            <Grid container>
-                                <Grid item>
-                                    <p>
-                                        PassWord: Your Pass
-                                    </p>
-                                    <p>
-                                        FileName: Your FileName + encrypted
-                                    </p>
-                                </Grid>
-                            </Grid>
-
-
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
-                                startIcon={<GetAppIcon />}
-                            >
-                                Download
-                            </Button>
-                        </Box>
+                       
 
                         <Box component="form" sx={{ p: 1, mt: 1, width: { xs: '100%', md: '70%' } }}>
                             <TextField
