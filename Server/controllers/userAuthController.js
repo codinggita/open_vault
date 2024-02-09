@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
         const oldUser = await User.findOne({ email });
 
         if (oldUser) {
-            responseObject.msg = `User with email ${oldUser} already exits.`;
+            responseObject.msg = `User with email ${oldUser.email} already exits.`;
             return res.status(StatusCodes.CONFLICT).send(responseObject);
         }
 
@@ -56,7 +56,6 @@ const registerUser = async (req, res) => {
         responseObject.isVerified = true;
         responseObject.accessToken = accessToken;
         responseObject.msg = `Logged in Successfully`;
-        responseObject.user = user;
 
         return res.status(StatusCodes.OK).send(responseObject);
     } catch (err) {
@@ -96,8 +95,7 @@ const loginUser = async (req, res) => {
             responseObject.isVerified = true;
             responseObject.accessToken = accessToken;
             responseObject.msg = `Logged in Successfully`;
-            responseObject.user = oldUser;
-
+            
             return res.status(StatusCodes.OK).send(responseObject);
         }
 
