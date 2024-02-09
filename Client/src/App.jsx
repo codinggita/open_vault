@@ -1,21 +1,14 @@
-import './App.css'
+import "./App.css";
 
 import Routes from "./routes";
-import { useAuth } from './provider/authProvider';
-import Nav from './components/Home/Nav'
-import Footer from './components/Home/Footer';
+import { useAuth } from "./provider/authProvider";
 
 function App() {
-
-    const { token } = useAuth();
-
-    return (
-        <>
-            {token && <Nav />}
-            <Routes />
-            {token && <Footer />}
-        </>
-    )
+	return (
+		<>
+			<Routes />
+		</>
+	);
 }
 
-export default App
+export default App;
